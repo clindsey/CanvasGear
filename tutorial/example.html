@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>breakout</title>
+    <script type="text/javascript" src="../CanvasGear.js"></script>
+    <script type="text/javascript" src="../fonts/Vegur.font.js"></script>
+    <script type="text/javascript">
+      var on_load = function(){
+        canvas_gear('canvas',20,BreakoutScene,function(engine){
+          engine.start();
+        });
+      };
+      (function(window,undefined){
+        var bricks_line = 6,
+            score = 0;
+        window.BreakoutScene = function(scene){
+          var background = new Background(scene.width,scene.height);
+          scene.add_interactive(background);
+          var score_board = new DisplayObject.Text('Score: ' + score,24,0,0,16,{'background-color':'#111111','color':'#CCCCCC','font-weight':700,'font-family':'Vegur','text-align':'left','font-size':12});
+          scene.add(score_board);
+          var player = new Player(scene.width / 2,scene.height - 20);
+          scene.add(player);
+          background.bind('mousemove',function(e){
+            player.x = e.x - 15;
+          });
+          background.bind('mousedown',function(){
+            ball.trigger('release');
+          });
+          player.bind('draw',function(){
+            if(player.x < 0) player.x = 0;
+            if(player.x > scene.width - player.width) player.x = scene.width - player.width;
+          });
+          var ball = new Ball(scene.width / 2,scene.height - 25);
+          scene.add(ball);
+          ball.bind('draw',function(){
+            if(!ball.released) ball.x = player.x + 12;
+            if(ball.x <= 0 || ball.x >= scene.width) ball.velocity.x *= -1;
+            if(ball.y <= 16) ball.velocity.y *= -1;
+            if(ball.y >= scene.height){
+              ball.y = scene.height - 25;
+              ball.x = player.x + 12;
+              ball.released = false; 
+              score = 0;
+              score_board.text = 'Score: ' + score;
+            }
+          });
+          var bricks = new DisplayObject.Container(0,0,scene.width,scene.height,{});
+          scene.add(bricks);
+          for(var i = 0; i < 15; i++){
+            for(var j = 0; j < bricks_line; j++){
+              bricks.add(new Brick(i * 21 + 3,j * 11 + 16,'#FF5500'));
+            };
+          };
+          scene.bind('update',function(){
+            collide(ball,player,function(){
+              ball.velocity.y *= -1;
+            });
+            collide(ball,bricks,function(brick){
+              score += 5;
+              score_board.text = 'Score: ' + score;
+              bricks.remove(brick);
+              ball.velocity.y *= -1;
+            });
+          });
+        };
+        var collide = function(do_0,do_1,callback){
+          var list_a = do_0.get_displayables === undefined ? [do_0] : do_0.get_displayables(),
+              list_b = do_1.get_displayables === undefined ? [do_1] : do_1.get_displayables();
+          for(var i = 0, il = list_a.length; i < il; i++){
+            var obj_a = list_a[i];
+            for(var j = 0, jl = list_b.length; j < jl; j++){
+              var obj_b = list_b[j];
+              if(obj_a.x + obj_a.width <= obj_b.x) continue; // left
+              if(obj_a.x + obj_a.width >= obj_b.x + obj_b.width) continue; // right
+              if(obj_a.y + obj_a.height <= obj_b.y) continue; // above
+              if(obj_a.y + obj_a.height >= obj_b.y + obj_b.height) continue; // below
+              callback(obj_b);
+            };
+          };
+        };
+        var Ball = function(x,y){
+          var self = new DisplayObject.Rectangle(x,y,3,3,{'background-color':'#FF0000'});
+          self.velocity = {'x':0,'y':0};
+          self.released = false;
+          self.bind('draw',function(){
+            if(self.released){
+              self.x += self.velocity.x;
+              self.y += self.velocity.y;
+            };
+          });
+          self.bind('release',function(){
+            self.velocity.x = self.velocity.y = -4;
+            self.released = true;
+          });
+          return self;
+        };
+        var Brick = function(x,y,color){
+          var height = 10,
+              gradients = [{'type':'linear','points':[0,0,0,height],'stops':[[0,'rgba(136,136,136,0)'],[1,'rgba(136,0,0,1)']]}],
+              self = new DisplayObject.Rectangle(x,y,20,10,{'background-color':color,'gradients':gradients});
+          return self;
+        };
+        var Player = function(x,y){
+          var self = new DisplayObject.Rectangle(x,y,30,5,{'background-color':'#FFFFFF'});
+          return self;
+        };
+        var Background = function(width,height){
+          var self = new DisplayObject.Rectangle(1,1,width - 2,height - 2,{'background-color':'#000000'});
+          return self;
+        };
+      })(window);
+    </script>
+    <style type="text/css">
+      #canvas {
+        width:320px;
+        height:240px;
+        margin:0 auto;
+      }
+    </style>
+  </head>
+  <body onload="on_load()">
+    <div id="main-wrapper">
+      <div id="canvas"></div>
+    </div>
+  </body>
+</html>

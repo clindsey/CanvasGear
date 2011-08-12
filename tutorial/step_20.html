@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>CanvasGear Tutorial</title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css" />
+    <script type="text/javascript">
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+  <body>
+    <h3>Basic Page Structure</h3>
+    <p>The page will need to have the CanvasGear.js script included, a DOM node to bind the canvas to, CSS to set canvas dimensions, and an on_load callback to get things started once the page loads.
+    <pre class="brush: html;">
+      &lt;!DOCTYPE html&gt;
+      &lt;html&gt;
+        &lt;head&gt;
+          &lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+          &lt;title&gt;Project Name&lt;/title&gt;
+          &lt;script type="text/javascript" src="CanvasGear.js"&gt;&lt;/script&gt;
+          &lt;script type="text/javascript"&gt;
+            var on_load = function(){
+            };
+          &lt;/script&gt;
+          &lt;style type="text/css"&gt;
+            #canvas {
+              width:320px;
+              height:480px;
+              margin:0 auto;
+            }
+          &lt;/style&gt;
+        &lt;/head&gt;
+        &lt;body onload="on_load()"&gt;
+          &lt;div id="canvas"&gt;&lt;/div&gt;
+        &lt;/body&gt;
+      &lt;/html&gt;
+    </pre>
+  </body>
+</html>
