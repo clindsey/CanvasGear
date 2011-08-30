@@ -18,27 +18,27 @@
             score = 0;
         window.TouchAsteroidsScene = function(s){
           scene = s;
-          scene.add(new Background(scene.width,scene.height));
+          scene.add(Background(scene.width,scene.height));
           var asteroids_count = 3;
           for(var i = 0; i < asteroids_count; i++){
             add_asteroid(Math.random() * scene.width,Math.random() * scene.height,3);
           };
-          score_board = new DisplayObject.Text('0',scene.width / 2,10,0,40,{'background-color':'#111111','color':'#CCCCCC','font-weight':700,'font-family':'Vegur','text-align':'right','font-size':32});
+          score_board = DisplayObject.Text('0',scene.width / 2,10,0,40,{'background-color':'#111111','color':'#CCCCCC','font-weight':700,'font-family':'Vegur','text-align':'right','font-size':32});
           scene.add(score_board);
           scene.bind('update',function(){
             score_board.text = score;
           });
         };
         var Background = function(width,height){
-          var self = new DisplayObject.Container(0,0,width,height,{}),
+          var self = DisplayObject.Container(0,0,width,height,{}),
               gradients = [{'type':'linear','points':[0,0,0,height],'stops':[[0,'rgba(136,136,136,0)'],[1,'rgba(136,136,136,0.5)']]}],
-              gradient = new DisplayObject.Rectangle(0,0,width,height,{'background-color':'#111111','gradients':gradients});
+              gradient = DisplayObject.Rectangle(0,0,width,height,{'background-color':'#111111','gradients':gradients});
           self.add(gradient);
           return self;
         };
         var Asteroid = function(x,y,radius,edge_count,rotation,direction,speed,rotation_speed,life){
           var gradients = [{'type':'radial','points':[0,0,0,0,0,radius],'stops':[[1,'rgba(0,0,0,0.3)'],[0,'rgba(136,136,136,0.5)']]}],
-              self = new DisplayObject(x,y,{'border-color':'#AAAAAA','border-width':2,'background-color':'#111111','gradients':gradients});
+              self = DisplayObject(x,y,{'border-color':'#AAAAAA','border-width':2,'background-color':'#111111','gradients':gradients});
           self.vertices = [];
           var point_index,
               point_increment = 360 / edge_count,
@@ -89,7 +89,7 @@
         };
         var add_asteroid = function(x,y,life){
           var i = asteroids.length;
-          asteroids[i] = new Asteroid(x,y,Math.random() * 4 + (8 * life),Math.floor(Math.random() * 4 + 5) * 2,Math.random() * 360,Math.random() * 360,Math.random() * 3 + 3,Math.random() * 32 - 16,life);
+          asteroids[i] = Asteroid(x,y,Math.random() * 4 + (8 * life),Math.floor(Math.random() * 4 + 5) * 2,Math.random() * 360,Math.random() * 360,Math.random() * 3 + 3,Math.random() * 32 - 16,life);
           scene.add_interactive(asteroids[i]);
         };
         var convert_to_radians = function(degrees){
