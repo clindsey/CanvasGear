@@ -1,6 +1,6 @@
 (function(window,undefined){
   window.canvas_gear = function(bind_elem_id,fps,scene,callback){
-    new CanvasGear(bind_elem_id,fps,scene,callback);
+    CanvasGear(bind_elem_id,fps,scene,callback);
   };
   var CanvasGear = function(bind_elem_id,fps,scene,callback){
     var self = {},
@@ -16,13 +16,13 @@
     self.load = function(new_scene){
       if(engine) engine.destroy();
       self.__scene__ = new_scene;
-      engine = new CanvasGraphics(bind_elem_id,fps);
-      new self.__scene__(engine);
+      engine = CanvasGraphics(bind_elem_id,fps);
+      self.__scene__(engine);
       engine.bind('update',mouse_timer_fn);
     };
     self.start = function(){
       interval = setInterval(function(){
-        var now_time = new Date().getTime(),
+        var now_time = (new Date()).getTime(),
             t_delta = now_time - (last_update + remainder);
         last_update = now_time;
         do{
@@ -72,7 +72,7 @@
     return self;
   };
   var CanvasGraphics = function(bind_elem_id,fps){
-    var self = new EventDispatcher(),
+    var self = EventDispatcher(),
         bind_elem = document.getElementById(bind_elem_id),
         canvas_elem = bind_to_elem(bind_elem_id);
     var last_target,
@@ -81,8 +81,8 @@
         canvas = context.canvas,
         width = canvas.width,
         height = canvas.height,
-        display_manager = new DisplayManager(),
-        grid_manager = new GridManager(width,height,64);
+        display_manager = DisplayManager(),
+        grid_manager = GridManager(width,height,64);
     self.width = width;
     self.height = height;
     self.update = function(){
@@ -491,9 +491,9 @@
   window.CanvasGear = {
     'register_font':function(data){
       var self = this,
-          font = new Font(data),
+          font = Font(data),
           family = font.family;
-      if(!self.fonts[family]) self.fonts[family] = new FontFamily();
+      if(!self.fonts[family]) self.fonts[family] = FontFamily();
       self.fonts[family].add(font);
     },
     'fonts':{}
@@ -609,7 +609,7 @@
     return self;
   };
   window.DisplayObject = function(x,y,style){
-    var self = new EventDispatcher();
+    var self = EventDispatcher();
     self.x = x;
     self.y = y;
     self.rotation = 0;
@@ -648,12 +648,12 @@
     return self;
   };
   window.DisplayObject.Line = function(x,y,style){
-    var self = new DisplayObject(x,y,style);
+    var self = DisplayObject(x,y,style);
     self.$$line = true;
     return self;
   };
   window.DisplayObject.Rectangle = function(x,y,width,height,style){
-    var self = new DisplayObject(x,y,style);
+    var self = DisplayObject(x,y,style);
     self.width = width;
     self.height = height;
     self.add_vertex(0,0);
@@ -663,7 +663,7 @@
     return self;
   };
   window.DisplayObject.Container = function(x,y,width,height,style){
-    var self = new DisplayObject.Rectangle(x,y,width,height,style),
+    var self = DisplayObject.Rectangle(x,y,width,height,style),
         displayables = [],
         lookup = {};
     self.$$last_container_rotation = self.rotation;
@@ -697,7 +697,7 @@
     return self;
   };
   DisplayObject.Polygon = function(x,y,radius,edge_count,rotation,style){
-    var self = new DisplayObject(x,y,style);
+    var self = DisplayObject(x,y,style);
     self.radius = radius;
     self.edge_count = edge_count;
     self.rotation = rotation;
@@ -713,7 +713,7 @@
     return self;
   };
   DisplayObject.Text = function(text,x,y,width,height,style){
-    var self = new DisplayObject.Rectangle(x,y,width,height,style);
+    var self = DisplayObject.Rectangle(x,y,width,height,style);
     self.text = text;
     self.$$text = true;
     self.style['font-family'] = (style['font-family'] || 'Myriad Pro');
